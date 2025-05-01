@@ -1,0 +1,40 @@
+{
+    "name": "vscode-cyclecloud-extension",
+    "displayName": "CycleCloud Extension for VSCode",
+    "description": "Utilities for CycleCloud development.",
+    "version": "0.0.1",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gingi/vscode-cyclecloud-extension"
+    },
+    "icon": "Logo.png",
+    "publisher": "Shiran Pasternak",
+    "engines": {
+        "vscode": "^1.50.0"
+    },
+    "main": "./extension.js",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "contributes": {
+        "configuration": {
+            "title": "cyclecloud",
+            "properties": {
+                "cli.path": {
+                    "type": "string",
+                    "default": "cycle_server",
+                    "description": "Path to the cycle_server CLI"
+                },
+                "cli.statusRefreshInterval": {
+                    "type": "number",
+                    "default": 30,
+                    "description": "How often to refresh the status in seconds"
+                }
+            }
+        }
+    },
+    "devDependencies": {
+        "vsce": "^2.10.0"
+    }
+}

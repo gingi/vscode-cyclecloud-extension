@@ -2,7 +2,7 @@
     "name": "vscode-cyclecloud-extension",
     "displayName": "CycleCloud Extension for VSCode",
     "description": "Utilities for CycleCloud development.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -32,7 +32,21 @@
                     "description": "How often to refresh the status in seconds"
                 }
             }
-        }
+        },
+        "commands": [
+            {
+                "command": "cycleCloud.startCycleServer",
+                "title": "Start Cycle Server"
+            },
+            {
+                "command": "cycleCloud.stopCycleServer",
+                "title": "Stop Cycle Server"
+            },
+            {
+                "command": "cycleCloud.restartCycleServer",
+                "title": "Restart Cycle Server"
+            }
+        ]
     },
     "devDependencies": {
         "vsce": "^2.10.0"

@@ -11,9 +11,9 @@
     "icon": "Logo.png",
     "publisher": "Shiran Pasternak",
     "engines": {
-        "vscode": "^1.50.0"
+        "vscode": "^1.99.0"
     },
-    "main": "./extension.js",
+    "main": "./out/extension.js",
     "activationEvents": [
         "onStartupFinished"
     ],
@@ -35,20 +35,27 @@
         },
         "commands": [
             {
-                "command": "cycleCloud.startCycleServer",
+                "command": "cyclecloud.startCycleServer",
                 "title": "Start Cycle Server"
             },
             {
-                "command": "cycleCloud.stopCycleServer",
+                "command": "cyclecloud.stopCycleServer",
                 "title": "Stop Cycle Server"
             },
             {
-                "command": "cycleCloud.restartCycleServer",
+                "command": "cyclecloud.restartCycleServer",
                 "title": "Restart Cycle Server"
             }
         ]
     },
     "devDependencies": {
+        "@types/node": "^22.15.14",
+        "@types/vscode": "^1.99.1",
+        "typescript": "^5.8.3",
         "vsce": "^2.10.0"
+    },
+    "scripts": {
+        "build": "tsc -p .",
+        "package": "npm run build && vsce package"
     }
 }

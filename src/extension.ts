@@ -1,26 +1,29 @@
-const vscode = require("vscode");
-const { exec } = require("child_process");
+// @ts-check
+
+import * as vscode from "vscode";
+import { exec } from "child_process";
 
 /**
- * @param {vscode.ExtensionContext} context
+ * Activate the extension.
+ * @param context - The extension context.
  */
-function activate(context) {
+export function activate(context: vscode.ExtensionContext) {
     const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
     statusBarItem.text = "Cycle Server: Checking...";
     statusBarItem.show();
     context.subscriptions.push(statusBarItem);
 
-    addCommands(context);
-
-    const getCycleServerPath = () => {
+    const getCycleServerPath = (): string => {
         const config = vscode.workspace.getConfiguration("cli");
-        return config.get("path", "cycle_server");
+        return config.get<string>("path", "cycle_server");
     };
 
-    const getStatusTimeoutInterval = () => {
+    addCommands(context, getCycleServerPath);
+
+    const getStatusTimeoutInterval = (): number => {
         const config = vscode.workspace.getConfiguration("cli");
-        return config.get("statusRefreshInterval", 30);
-    }
+        return config.get<number>("statusRefreshInterval", 30);
+    };
 
     const updateStatus = () => {
         const command = `${getCycleServerPath()} status`;
@@ -28,8 +31,7 @@ function activate(context) {
             if (error) {
                 if (/STOPPED/.test(stdout)) {
                     statusBarItem.text = "Cycle Server: Stopped";
-                    statusBarItem.tooltip = `STDOUT: ${stdout}\n\n` +
-                        `STDERR: ${stderr}`;
+                    statusBarItem.tooltip = `STDOUT: ${stdout}\n\nSTDERR: ${stderr}`;
                     statusBarItem.command = "cyclecloud.startCycleServer";
                     return;
                 }
@@ -66,11 +68,14 @@ function activate(context) {
     context.subscriptions.push({ dispose: () => clearInterval(interval) });
 }
 
-function addCommands(context) {
+function addCommands(
+    context: vscode.ExtensionContext,
+    getCycleServerPath: () => string
+) {
     const commands = [
-        { id: "cycleCloud.startCycleServer", arg: "start" },
-        { id: "cycleCloud.stopCycleServer", arg: "stop" },
-        { id: "cycleCloud.restartCycleServer", arg: "restart" }
+        { id: "cyclecloud.startCycleServer", arg: "start" },
+        { id: "cyclecloud.stopCycleServer", arg: "stop" },
+        { id: "cyclecloud.restartCycleServer", arg: "restart" }
     ];
 
     for (const { id, arg } of commands) {
@@ -85,7 +90,7 @@ function addCommands(context) {
                     cancellable: false
                 },
                 async () =>
-                    new Promise((resolve, reject) => {
+                    new Promise<void>((resolve, reject) => {
                         exec(cmd, (error, stdout, stderr) => {
                             if (error) {
                                 vscode.window.showErrorMessage(
@@ -94,7 +99,8 @@ function addCommands(context) {
                                 reject(error);
                             } else {
                                 vscode.window.showInformationMessage(
-                                    `cycle_server ${arg} completed successfully.`);
+                                    `cycle_server ${arg} completed successfully.`
+                                );
                                 resolve();
                             }
                         });
@@ -106,9 +112,4 @@ function addCommands(context) {
     }
 }
 
-function deactivate() { }
-
-module.exports = {
-    activate,
-    deactivate
-};
+export function deactivate() {}
